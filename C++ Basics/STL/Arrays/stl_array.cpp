@@ -17,6 +17,13 @@ int main() {
 
     // alternatively we can use a.at(i) to get a particular element....
     cout << "element at 2nd pos " << a.at(1);
+    cout << endl;
 
-    
+    // check if array empty or not returns 0 for false...
+
+    cout << "is empty ? " << a.empty() << endl;
+
+
+    cout << "front and last element of the array " << a.front() << ", " << a.back() << endl;
+
 }
