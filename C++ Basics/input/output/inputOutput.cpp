@@ -25,7 +25,7 @@ int main()
   cout << a << endl;
   string name;
   cout << "Enter your full name";
-  std::getline(std::cin,name);
+  getline(cin,name);
 
       // Printing string : This does
       // not print string

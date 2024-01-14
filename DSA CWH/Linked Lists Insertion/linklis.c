@@ -6,45 +6,40 @@ struct node
   int value;
 };
 
-struct node * deleteAtFirst(struct node *head)
+struct node * insertAtEnd(struct node *head, int num)
 {
-  struct node * ptr = head; // creating an extra copy just for the free() function to work and to also return the updated head
-  head = head->next;
-  free(ptr);
+  struct node *p = head;
+  while (p->next != NULL)
+  {
+    p = p->next;
+  }
+  struct node *new_node = (struct node *) malloc(sizeof(struct node));
+  new_node->value = num;
+  new_node->next = NULL;
+  p->next = new_node;
   return head;
 }
 
-void deleteAtIndex(struct node *head, int index)
+void insertAtIndex(struct node *head, int pos, int num)
 {
   int c = 1;
-  struct node *ptr = head;
-  while(c<(index-1))
+  struct node *new_node = (struct node *) malloc(sizeof(struct node));
+  new_node->value = num;
+  while (c < (pos-1))
   {
-    ptr = ptr -> next;
+    head = head->next;
     c++;
   }
-  struct node *nextptr = ptr->next;
-  struct node *next_p = nextptr->next;
-  free(nextptr);
-  // nextptr = nextptr->next;
-  ptr->next = next_p;
-  
-  
+  new_node->next = head->next;
+  head->next = new_node;
 }
 
-void deleteLast(struct node *head)
+struct node *insertAtBegin(struct node *head, int num)
 {
-  struct node *ptr = head;
-  struct node *ptr2 = head->next;
-  while(ptr2->next != NULL)
-  {
-    ptr = ptr->next;
-    ptr2 = ptr2->next;
-  }
-
-  ptr->next = NULL;
-
-
+  struct node *new_head = (struct node *)malloc(sizeof(struct node));
+  new_head->next = head;
+  new_head->value = num;
+  return new_head;
 }
 
 void display(struct node *head)
@@ -88,12 +83,15 @@ int main()
   fifth->value = 61;
   fifth->next = NULL;
 
-  // display(head);
-  // head = deleteAtFirst(head);
   display(head);
-  deleteAtIndex(head, 3);
+  head = insertAtBegin(head, 99);
   display(head);
-  deleteLast(head);
+
+  insertAtIndex(head, 2, 76);
   display(head);
+
+  head = insertAtEnd(head, 65);
+  display(head);
+
   return 0;
 }

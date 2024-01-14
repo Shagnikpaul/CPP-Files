@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int upd(int& x)
+void upd(int& x)
 {
     x++;
 }
@@ -31,6 +31,8 @@ int main()
     int  n;
     cin >> n; 
     char* ch = new char[n];
+    
+    
     // and not char ch[n] which creates from stack memory and has chances of overflow...
     cout << "Created " << endl;
 }
