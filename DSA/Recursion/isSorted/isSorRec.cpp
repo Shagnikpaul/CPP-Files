@@ -23,5 +23,5 @@ int main()
     int arr2[] = {1, 2, 3, 4, 5};
 
     int size = 5;
-    cout << "is Sorted ? " << isSort(arr, size) << endl;
+    cout << "is Sorted ? " << isSort(arr2, size) << endl;
 }

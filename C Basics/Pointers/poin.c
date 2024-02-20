@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
 
   int* nulpt = NULL;
 
-
+  printf("pointers !!");	
   printf("%p", *b);
   return 0;
 }
