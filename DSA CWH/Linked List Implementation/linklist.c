@@ -10,7 +10,7 @@ void LinkedListTraversal(struct Node *head)
 {
   if (head->next == NULL)
     printf("%d ", head->value);
-  else
+  else     
   {
     printf("%d ", head->value);
     LinkedListTraversal(head->next);
@@ -28,6 +28,8 @@ int main()
   second = (struct Node *)malloc(sizeof(struct Node));
   third = (struct Node *)malloc(sizeof(struct Node));
   fourth = (struct Node *)malloc(sizeof(struct Node));
+
+
   head->value = 12;
   head->next = second;
   second->value = 13;
