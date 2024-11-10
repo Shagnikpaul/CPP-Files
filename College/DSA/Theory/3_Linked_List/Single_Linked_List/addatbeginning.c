@@ -13,9 +13,8 @@ typedef struct linkedlist
 
 } Linkedlist;
 
-
 void traverse(Linkedlist *l);
-void addAtBeginning(Linkedlist *l, int x);
+void deleteAtBeginning(Linkedlist *l, int x);
 
 int main()
 {
@@ -42,13 +41,13 @@ int main()
     two->next = three;
     three->next = four;
     four->next = NULL;
-    
+
     Linkedlist *l;
     l = malloc(sizeof(Linkedlist));
     l->head = one;
 
     traverse(l);
-    addAtBeginning(l, 80);
+    deleteAtBeginning(l, 80);
     printf("\n");
     traverse(l);
     return 0;
@@ -66,7 +65,7 @@ void traverse(Linkedlist *l)
     return;
 }
 
-void addAtBeginning(Linkedlist *l, int x)
+void deleteAtBeginning(Linkedlist *l, int x)
 {
     Node *newnode = malloc(sizeof(Node));
     newnode->data = x;

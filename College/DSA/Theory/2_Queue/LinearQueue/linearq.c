@@ -114,10 +114,16 @@ int dequeue(Queue *q)
     if (isEmpty(q))
     {
         printf("Queue is already empty !!\n\n");
+
         return -1;
     }
     int a = q->arr[q->front];
     q->front++;
+    if (q->front > q->back)
+    {
+        q->front = -1;
+        q->back = -1;
+    }
     return a;
 }
 
@@ -146,10 +152,8 @@ int isFull(Queue *q)
 
 int isEmpty(Queue *q)
 {
-    if (q->back==q->front)
+    if (q->front > q->back || q->front == -1)
     {
-        q->front = -1;
-        q->back = -1;
         return 1;
     }
     return 0;

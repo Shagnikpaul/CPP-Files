@@ -47,7 +47,7 @@ int main()
     l->head = one;
 
     traverse(l);
-    addAtposK(l,6,21);
+    addAtposK(l,2,21);
     traverse(l);
     return 0;
 }
