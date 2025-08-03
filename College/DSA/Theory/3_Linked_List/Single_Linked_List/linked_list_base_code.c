@@ -3,10 +3,20 @@
 
 typedef struct Node
 {
-    int data;
+    int age;
+    char name[100];
+    char grade;
+
     struct Node *next;
 } Node;
 
+
+
+typedef struct VowConNode {
+    int vow;
+    int conl
+
+} VowConNode;
 typedef struct linkedlist
 {
     Node *head;

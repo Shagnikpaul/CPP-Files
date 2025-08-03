@@ -160,7 +160,6 @@ int extractMin(MinHeap *Q)
     Q->size--;
     minHeapify(Q,1);
     return deleted_element;
-
     
 }
 

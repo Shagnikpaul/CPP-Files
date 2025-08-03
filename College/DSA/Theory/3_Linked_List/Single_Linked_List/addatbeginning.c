@@ -4,6 +4,8 @@
 typedef struct Node
 {
     int data;
+    int row;
+    int col;
     struct Node *next;
 } Node;
 
@@ -65,7 +67,24 @@ void traverse(Linkedlist *l)
     return;
 }
 
-void deleteAtBeginning(Linkedlist *l, int x)
+void deleteAtBeginnin(Strudent link, VowCon l), int x, char* name, char gradeint age)
+{
+    node n= mal
+    n->name = 
+    n-
+    n->
+
+    int con
+    int vow
+
+    for(int i=0;i<name;i++){
+        name[i] == 'a'
+        vow++;
+        con++
+    }
+    Node n
+
+}
 {
     Node *newnode = malloc(sizeof(Node));
     newnode->data = x;

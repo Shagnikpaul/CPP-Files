@@ -1,0 +1,8 @@
+{
+    int d[3], r1, t2; r1 = 2;
+    a[0] = 1; a[1] = 2; a[r1] = 3;
+    t2 = -(a[2] + r1 * 6) / (a[2] - r1);
+    if t2 >= 5 then print(t2);
+    else { int t3; t3 = 99; t2 = 25; print(-r1 + t2 * t3); /*This is a comment line*/ }
+    endif
+}
