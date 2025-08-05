@@ -9,7 +9,7 @@ int isPowerOfTwo(int x)
 }
 
 // Calculate number of parity bits required
-int calculateParityBits(int m)
+int calculateParityBitCount(int m)
 {
     int r = 0;
     while ((1 << r) < (m + r + 1))
@@ -44,7 +44,7 @@ int main()
         scanf("%d", &data[i]);
     }
 
-    int r = calculateParityBits(m);
+    int r = calculateParityBitCount(m);
     int totalBits = m + r;
     int *code = (int *)calloc(totalBits + 1, sizeof(int)); // 1-based indexing
 

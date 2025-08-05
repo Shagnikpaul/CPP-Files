@@ -36,16 +36,6 @@ bool isOperator(char ch)
 
 int main()
 {
-    vector<pair<string, int>> keywords;
-
-    vector<pair<string, int>> identifiers;
-
-    vector<pair<string, int>> numbers;
-
-    vector<pair<char, int>> delimiters;
-
-    vector<pair<string, int>> operators;
-    vector<pair<char, int>> singleOperators;
 
     string s;
     int ignoreLine = 0;
@@ -96,25 +86,34 @@ int main()
 
                         if (isKeyword(token))
                         {
-                            // cout << "Keyword: " << token << " at line no. " << (i + 1) << endl;
-                            keywords.push_back({token, i + 1});
+                            cout << token << " is not a valid identifier since it is a keyword" << endl;
                         }
-
                         else
                         {
-                            // cout << "Identifier: " << token << " at line no. " << (i + 1) << endl;
-                            identifiers.push_back({token, i + 1});
+                            cout << token << " is a valid identifier" << endl;
                         }
                     }
                     else if (isdigit(s[j]))
                     {
                         token = "";
-                        while (j < s.length() && isdigit(s[j]))
+                        int dotCount = 0;
+                        while (j < s.length() && (isdigit(s[j]) || s[j] == '.'))
                         {
+                            if (s[j] == '.')
+                            {
+                                dotCount++;
+                            }
                             token += s[j];
                             j++;
                         }
-                        numbers.push_back({token, i + 1});
+                        if (dotCount <= 1)
+                        {
+                            cout << token << " is a valid constant " << endl;
+                        }
+                        else
+                        {
+                            cout << token << " is a invalid constant " << endl;
+                        }
                         // cout << "Number: " << token << endl;
                     }
 
@@ -131,7 +130,7 @@ int main()
                             twoCharOp == "-=" || twoCharOp == "*=" || twoCharOp == "/=")
                         {
                             // cout << "Operator: " << twoCharOp << endl;
-                            operators.push_back({twoCharOp, i + 1});
+
                             j += 2;
                             continue;
                         }
@@ -140,7 +139,7 @@ int main()
                     // If it's a single-character operator
                     if (isOperator(s[j]))
                     {
-                        singleOperators.push_back({s[j], i + 1});
+
                         // cout << "Operator: " << s[j] << endl;
                     }
 
@@ -149,7 +148,7 @@ int main()
                     {
                         if (s[j] != ' ' && s[j] != '\n' && s[j] != '\t')
                         {
-                            delimiters.push_back({s[j], i + 1});
+
                             // cout << "Delimiter: " << s[j] << endl;
                         }
                     }
@@ -158,40 +157,5 @@ int main()
         }
         // cout << "Line " << i + 1 << ": " << s << endl;
         i++;
-    }
-
-    cout << "\n\nKeyword list : " << endl;
-    for (const auto &k : keywords)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\nIdentifiers list : " << endl;
-    for (const auto &k : identifiers)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\nOperators list : " << endl;
-    for (const auto &k : operators)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    for (const auto &k : singleOperators)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\n Delimiters list : " << endl;
-    for (const auto &k : delimiters)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\nNumbers list : " << endl;
-    for (const auto &k : numbers)
-    {
-        cout << k.first << " Line: " << k.second << endl;
     }
 }
