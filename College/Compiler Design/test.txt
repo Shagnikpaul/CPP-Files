@@ -1,23 +1,12 @@
-int main()
-{
-    int n = 2;
-    if (n == 1)
-        printf("yes");
-    int k = digitSum(n);
-    printf("%d \n", k);
-    while (k != 4)
-    {
-        if (k == 1)
-        {
-            printf("yes");
-            break;
-        }
-        else
-        {
-            k = digitSum(k);
-            printf("%d \n", k);
-        }
-    }
-    printf("no");
-    return 0;
-}
+int count = 42;
+_underscoreStart = 1234;
+0LeadingZero = 0123333333333333333333;
+valid_1, 
+invalid-2
+varWithoutValue;
+piValue = 3.14
+constant_only 1000
+final_result = total + delta;
+Invalid*Symbol
+validName
+99bottles

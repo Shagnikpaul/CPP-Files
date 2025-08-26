@@ -1,127 +1,73 @@
-#include "stdio.h"
-#include "stdlib.h"
+
+#include <stdio.h>
+#include <math.h>
+
+// Function to check if a number is a power of two
 int isPowerOfTwo(int n)
 {
-    if (n < 0 || n == 0)
+    if (n < 1)
         return 0;
-    if ((n & (n - 1)) == 0)
-        return 1;
-    else
-        return 0;
-}
-
-int calculateParityBitCount(int n)
-{
-    int r = 1;
-    while ((1 << r) < (n + r + 1))
-    {
-        r++;
-    }
-    return r;
-}
-
-void calculateParity(int *code, int len)
-{
-    int j = 0;
-    for (int i = 1; i <= len; i++)
-    {
-        if (isPowerOfTwo(i) || i == 1)
-        {
-            int checkBit = 1 << j++;
-            int parity = 0;
-            for (int k = 1; k <= len; k++)
-            {
-                if (code[k] != -1 && (checkBit & k) != 0)
-                {
-                    parity ^= code[k];
-                }
-            }
-            code[i] = parity;
-        }
-    }
+    return (n & (n - 1)) == 0;
 }
 
 int main()
 {
-    //// write da code here...
-
-    int n;
-    printf("Enter the number of bits in the data : ");
-    scanf("%d", &n);
-    getchar();
-
-    char inp[100];
-    printf("Enter the data : ");
-    fgets(inp, 100, stdin);
-    int parityBitCount = calculateParityBitCount(n);
-    int *code = malloc(sizeof(int) * (n + parityBitCount + 1));
-
-    int k = n - 1;
-
-    for (int i = 1; i <= (n + parityBitCount); i++)
+    int m, r = 0, i, j, k;
+    // Input the number of data bits
+    printf("Enter the number of data bits: ");
+    scanf("%d", &m);
+    int data[m];
+    // Input the data bits
+    printf("Enter the data bits: ");
+    for (i = 0; i < m; i++)
     {
-        if (isPowerOfTwo(i))
-            code[i] = -1;
-        else
-            code[i] = (inp[k--] - '0');
+        scanf("%d", &data[i]);
     }
-    printf("\nParity Bit count %d\n", parityBitCount);
-    printf("\nBefore parity calculation the hamming code looks like this \n");
-    for (int i = (n + parityBitCount); i >= 1; i--)
+
+    // Calculate the number of redundant bits required for Hamming code
+    while ((1 << r) < (m + r + 1))
     {
-        printf("%d, ", code[i]);
+        r++;
     }
-    printf("\n");
 
-    calculateParity(code, parityBitCount + n);
-
-    printf("After parity calculation the hamming code looks like this \n");
-    for (int i = (n + parityBitCount); i >= 1; i--)
+    // Initialize the Hamming code array
+    int hamming[m + r + 1];
+    // Place the data and redundant bits in their respective positions
+    for (i = 1, j = 0, k = 0; i <= m + r; i++)
     {
-        printf("%d, ", code[i]);
-    }
-    printf("\n");
-
-    printf("Enter the position of error you want if any (within 1 to %d)\n", n);
-    int errorPosition;
-    scanf("%d", &errorPosition);
-
-    for (int i = 1; i <= parityBitCount + n; i++)
-    {
-        if (isPowerOfTwo(i))
+        if (i == (1 << k))
         {
-            continue;
-        }
-        else if (errorPosition == 1)
-        {
-            code[i] ^= 1;
-            break;
+            hamming[i] = 0; // Placeholder for redundant bit
+            k++;
         }
         else
         {
-            errorPosition--;
+            hamming[i] = data[j++]; // Place data bit
         }
     }
 
-    printf("After fliping the bit hamming code looks like this \n");
-    for (int i = (n + parityBitCount); i >= 1; i--)
+    // Calculate parity bits for each redundant position
+    for (i = 0; i < r; i++)
     {
-        printf("%d, ", code[i]);
+        int parity = 0;
+        for (j = 1; j <= m + r; j++)
+        {
+            // Check if the j-th bit is covered by the i-th parity bit
+            if (j & (1 << i))
+            {
+                parity ^= hamming[j]; // XOR to calculate parity
+            }
+        }
+        hamming[(1 << i)] = parity; // Set the calculated parity bit
+    }
+
+    // Output the final Hamming code
+    printf("\nHamming code: ");
+    for (i = 1; i <= m + r; i++)
+    {
+        printf("%d ", hamming[i]);
     }
     printf("\n");
-
-    calculateParity(code, parityBitCount + n);
-
-    int estimate = 0;
-    for (int i = 1; i <= parityBitCount + n; i++)
-    {
-        if (isPowerOfTwo(i) || i == 1)
-        {
-            estimate += code[i] * i;
-        }
-    }
-
-    printf("\n Estimated position : %d th Bit of the hamming code.\n", estimate);
 
     return 0;
 }
