@@ -3,41 +3,45 @@
 
 int powerOfTwo(int x)
 {
-    if (x == 0 || x < 0)
+    if (x < 0 || x == 0)
+    {
         return 0;
+    }
     if ((x & (x - 1)) == 0)
+    {
         return 1;
+    }
     else
+    {
         return 0;
+    }
 }
 
 int countParityBits(int n)
 {
     int r = 1;
-    while ((1 << r) < (1 + n + r))
-    {
+    while ((1 << r) < (n + r + 1))
         r++;
-    }
     return r;
 }
 
-void calculateParity(int *code, int l)
+int calculateParity(int *data, int n)
 {
     int j = 0;
-    for (int i = 1; i <= l; i++)
+    for (int i = 1; i <= n; i++)
     {
         if (powerOfTwo(i) || i == 1)
         {
-            int parity = 0;
             int checkBit = 1 << j++;
-            for (int j = 1; j <= l; j++)
+            int parity = 0;
+            for (int k = 1; k <= n; k++)
             {
-                if (code[j] != -1 && (checkBit & j))
+                if (data[k] != -1 && (checkBit & k))
                 {
-                    parity ^= code[j];
+                    parity ^= data[k];
                 }
             }
-            code[i] = parity;
+            data[i] = parity;
         }
     }
 }
@@ -45,6 +49,7 @@ void calculateParity(int *code, int l)
 int main()
 {
     //// write da code here...
+
     char inp[100];
     int n;
     printf("Enter the no of bits in the data: ");

@@ -6,16 +6,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-map<string, map<string, vector<string>>> parsingTable;
+map<string, map<string, vector<string>>> table;
 
-bool isTerminal(const string &sym)
+bool isTerm(const string &sym)
 {
     return !(sym == "E" || sym == "E'" || sym == "T" || sym == "T'" || sym == "F");
 }
 
 vector<string> tokenize(const string &s)
 {
-    vector<string> tokens;
+    vector<string> toks;
     string temp;
     for (int i = 0; i < s.size(); i++)
     {
@@ -31,43 +31,44 @@ vector<string> tokenize(const string &s)
                 i++;
             }
             i--;
-            tokens.push_back("id");
+            toks.push_back("id");
         }
         else if (c == '+' || c == '*' || c == '(' || c == ')')
         {
-            tokens.push_back(string(1, c));
+            toks.push_back(string(1, c));
         }
         else
         {
-            cout << "Invalid character in input: " << c << "\n";
+            cout << "Invalid character in expression: " << c << "\n";
             exit(0);
         }
     }
-    tokens.push_back("$");
-    return tokens;
+    toks.push_back("$");
+    return toks;
 }
 
 int main()
 {
-    parsingTable["E"]["("] = {"T", "E'"};
-    parsingTable["E"]["id"] = {"T", "E'"};
+    cout << "\n\n23BCT0266\n\n";
+    table["E"]["("] = {"T", "E'"};
+    table["E"]["id"] = {"T", "E'"};
 
-    parsingTable["E'"]["+"] = {"+", "T", "E'"};
-    parsingTable["E'"][")"] = {"ε"};
-    parsingTable["E'"]["$"] = {"ε"};
+    table["E'"]["+"] = {"+", "T", "E'"};
+    table["E'"][")"] = {"eps"};
+    table["E'"]["$"] = {"eps"};
 
-    parsingTable["T"]["("] = {"F", "T'"};
-    parsingTable["T"]["id"] = {"F", "T'"};
+    table["T"]["("] = {"F", "T'"};
+    table["T"]["id"] = {"F", "T'"};
 
-    parsingTable["T'"]["*"] = {"*", "F", "T'"};
-    parsingTable["T'"]["+"] = {"ε"};
-    parsingTable["T'"][")"] = {"ε"};
-    parsingTable["T'"]["$"] = {"ε"};
+    table["T'"]["*"] = {"*", "F", "T'"};
+    table["T'"]["+"] = {"eps"};
+    table["T'"][")"] = {"eps"};
+    table["T'"]["$"] = {"eps"};
 
-    parsingTable["F"]["("] = {"(", "E", ")"};
-    parsingTable["F"]["id"] = {"id"};
+    table["F"]["("] = {"(", "E", ")"};
+    table["F"]["id"] = {"id"};
 
-    cout << "===============\n23BCT0266\n================\n\nEnter the input expression:\n";
+    cout << "Enter an expression to parse:\n";
     string expr;
     getline(cin, expr);
 
@@ -78,59 +79,59 @@ int main()
     st.push("E");
 
     int ip = 0;
-    cout << "\nParsing Steps:\n";
+    cout << "\nParsing process:\n";
     while (!st.empty())
     {
         string top = st.top();
         string cur = input[ip];
 
-        cout << "Stack top: " << top << " | Current input: " << cur << "\n";
+        cout << "[Top: " << top << " | Next: " << cur << "]\n";
 
-        if (isTerminal(top))
+        if (isTerm(top))
         {
             if (top == cur)
             {
                 st.pop();
                 ip++;
             }
-            else if (top == "ε")
+            else if (top == "eps")
             {
                 st.pop();
             }
             else
             {
-                cout << "Error: unexpected symbol!\n";
+                cout << "Parsing failed: unexpected symbol.\n";
                 return 0;
             }
         }
         else
         {
-            if (parsingTable[top].find(cur) != parsingTable[top].end())
+            if (table[top].find(cur) != table[top].end())
             {
                 st.pop();
-                vector<string> prod = parsingTable[top][cur];
-                if (!(prod.size() == 1 && prod[0] == "ε"))
+                vector<string> prod = table[top][cur];
+                if (!(prod.size() == 1 && prod[0] == "eps"))
                 {
                     for (int i = prod.size() - 1; i >= 0; i--)
                         st.push(prod[i]);
                 }
-                cout << top << " -> ";
+                cout << "Applied rule: " << top << " -> ";
                 for (auto &p : prod)
                     cout << p << " ";
                 cout << "\n";
             }
             else
             {
-                cout << "Error: no rule for [" << top << "," << cur << "]\n";
+                cout << "Parsing failed: no rule for (" << top << ", " << cur << ")\n";
                 return 0;
             }
         }
     }
 
     if (ip == input.size())
-        cout << "\nString Accepted \n";
+        cout << "\nExpression was parsed and accepted.\n";
     else
-        cout << "\nString Rejected\n";
+        cout << "\nExpression was parsed and rejected.\n";
 
     return 0;
 }

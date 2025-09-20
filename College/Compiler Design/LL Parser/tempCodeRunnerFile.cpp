@@ -3,6 +3,8 @@
 
 */
 
+
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -67,7 +69,7 @@ int main()
     parsingTable["F"]["("] = {"(", "E", ")"};
     parsingTable["F"]["id"] = {"id"};
 
-    cout << "===============\n23BCT0266\n================\n\nEnter the input expression:\n";
+    cout << "Enter the input expression:\n";
     string expr;
     getline(cin, expr);
 
