@@ -9,17 +9,10 @@ struct Process
     int id;
     int arrivalTime;
     int burstTime;
+    int remainingBurstTime;
     bool operator()(const Process &a, const Process &b)
     {
         return a.arrivalTime < b.arrivalTime;
-    }
-};
-
-struct PrioComp
-{
-    bool operator()(const Process &a, const Process &b)
-    {
-        return a.burstTime > b.burstTime;
     }
 };
 
@@ -38,9 +31,11 @@ int main()
         cout << "Enter the arrival time and burst time of the ";
         int at, bt;
         cin >> at >> bt;
-        p.push_back({i, at, bt});
+        p.push_back({i, at, bt, bt});
     }
-
+    cout << "Enter the time quantum: ";
+    int quan;
+    cin >> quan;
     sort(p.begin(), p.end(), Process());
     queue<Process> q;
     for (int i = 0; i < n; i++)
@@ -48,28 +43,44 @@ int main()
         q.push(p.at(i));
         // cout << "Process " << " " << i << " " << p.at(i).arrivalTime;
     }
-    priority_queue<Process, vector<Process>, PrioComp> pq;
-
+    queue<Process> readyQueue;
     int currentTime = q.front().arrivalTime;
-
-    while (!(pq.empty() && q.empty()))
+    while (!(q.empty() && readyQueue.empty()))
     {
         while (!q.empty() && q.front().arrivalTime <= currentTime)
         {
-            pq.push(q.front());
-            //cout << "pushed " << q.front().id << "\n";
+            readyQueue.push(q.front());
             q.pop();
         }
 
-        Process j = pq.top();
-        pq.pop();
-        //cout << "Running process " << j.id << "\n";
-        ct[j.id] = currentTime + j.burstTime;
-        tat[j.id] = ct[j.id] - j.arrivalTime;
-        wt[j.id] = tat[j.id] - j.burstTime;
-
-        currentTime += j.burstTime;
+        Process pc = readyQueue.front();
+        readyQueue.pop();
+        if (pc.remainingBurstTime <= quan)
+        {
+            currentTime += pc.remainingBurstTime;
+            ct[pc.id] = currentTime;
+            tat[pc.id] = ct[pc.id] - pc.arrivalTime;
+            wt[pc.id] = tat[pc.id] - pc.burstTime;
+            pc.remainingBurstTime = 0;
+            while (!q.empty() && q.front().arrivalTime <= currentTime)
+            {
+                readyQueue.push(q.front());
+                q.pop();
+            }
+        }
+        else
+        {
+            pc.remainingBurstTime -= quan;
+            currentTime += quan;
+            while (!q.empty() && q.front().arrivalTime <= currentTime)
+            {
+                readyQueue.push(q.front());
+                q.pop();
+            }
+            readyQueue.push(pc);
+        }
     }
+
     // for (int i = 0; i < n; i++)
     // {
     //     p.at(i).completionTime = currentTime + p.at(i).burstTime;

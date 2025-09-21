@@ -10,16 +10,16 @@ struct Process
     int arrivalTime;
     int burstTime;
     int remainingBurstTime;
-    bool operator()(const Process &a, const Process &b)
+
+    bool operator()(const Process &a, struct Process &b)
     {
-        
         return a.arrivalTime < b.arrivalTime;
     }
 };
 
-struct PrioComp
+struct compBurst
 {
-    bool operator()(const Process &a, const Process &b)
+    bool operator()(const Process &a, struct Process &b)
     {
         return a.remainingBurstTime > b.remainingBurstTime;
     }
@@ -28,56 +28,54 @@ struct PrioComp
 int main()
 {
     int n;
-    cout << "Enter the number of processes : ";
+    cout << "Enter the number of processes: ";
     cin >> n;
-
     vector<Process> p;
+    for (int i = 0; i < n; i++)
+    {
+        int at, bt;
+        cout << "Enter the arrival and burst time of P" << (i + 1) << ": ";
+        cin >> at >> bt;
+        p.push_back({i, at, bt, bt});
+        cout << "Added : " << p.at(i).id << "\n";
+    }
+    sort(p.begin(), p.end(), Process());
+    for (int i = 0; i < n; i++)
+    {
+
+        cout << "\nProcess : " << p.at(i).id << "\n";
+    }
     int ct[n];
     int wt[n];
     int tat[n];
-    for (int i = 0; i < n; i++)
-    {
-        cout << "Enter the arrival time and burst time of the ";
-        int at, bt;
-        cin >> at >> bt;
-        p.push_back({i, at, bt, bt});
-    }
-
-    sort(p.begin(), p.end(), Process());
     queue<Process> q;
     for (int i = 0; i < n; i++)
     {
         q.push(p.at(i));
-        // cout << "Process " << " " << i << " " << p.at(i).arrivalTime;
     }
-
-    priority_queue<Process, vector<Process>, PrioComp> pq;
-
+    priority_queue<Process, vector<Process>, compBurst> pq;
     int currentTime = q.front().arrivalTime;
-
-    while (!(pq.empty() && q.empty()))
+    while (!(q.empty() && pq.empty()))
     {
         while (!q.empty() && q.front().arrivalTime <= currentTime)
         {
             pq.push(q.front());
-            cout << "pushed " << q.front().id << "\n";
             q.pop();
         }
 
-        Process j = pq.top();
+        Process s = pq.top();
         pq.pop();
-
-        j.remainingBurstTime--;
+        s.remainingBurstTime--;
         currentTime++;
-        if (j.remainingBurstTime == 0)
+        if (s.remainingBurstTime == 0)
         {
-            ct[j.id] = currentTime;
-            tat[j.id] = ct[j.id] - j.arrivalTime;
-            wt[j.id] = tat[j.id] - j.burstTime;
+            ct[s.id] = currentTime;
+            tat[s.id] = ct[s.id] - s.arrivalTime;
+            wt[s.id] = tat[s.id] - s.burstTime;
         }
         else
         {
-            pq.push(j);
+            pq.push(s);
         }
     }
     cout << "ALl the completion times : \n";

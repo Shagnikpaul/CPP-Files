@@ -10,25 +10,18 @@ struct Process
     int arrivalTime;
     int burstTime;
     int remainingBurstTime;
-    bool operator()(const Process &a, const Process &b)
-    {
-        
-        return a.arrivalTime < b.arrivalTime;
-    }
-};
 
-struct PrioComp
-{
     bool operator()(const Process &a, const Process &b)
     {
-        return a.remainingBurstTime > b.remainingBurstTime;
+        return a.arrivalTime < b.arrivalTime;
     }
 };
 
 int main()
 {
+
     int n;
-    cout << "Enter the number of processes : ";
+    cout << "Enter the number of process: ";
     cin >> n;
 
     vector<Process> p;
@@ -42,45 +35,57 @@ int main()
         cin >> at >> bt;
         p.push_back({i, at, bt, bt});
     }
+    cout << "Enter the time quantum: ";
+    int quan;
+    cin >> quan;
 
     sort(p.begin(), p.end(), Process());
+
     queue<Process> q;
     for (int i = 0; i < n; i++)
     {
         q.push(p.at(i));
-        // cout << "Process " << " " << i << " " << p.at(i).arrivalTime;
     }
 
-    priority_queue<Process, vector<Process>, PrioComp> pq;
-
+    queue<Process> readyQueue;
     int currentTime = q.front().arrivalTime;
-
-    while (!(pq.empty() && q.empty()))
+    while (!(q.empty() && readyQueue.empty()))
     {
         while (!q.empty() && q.front().arrivalTime <= currentTime)
         {
-            pq.push(q.front());
-            cout << "pushed " << q.front().id << "\n";
+            readyQueue.push(q.front());
             q.pop();
         }
 
-        Process j = pq.top();
-        pq.pop();
-
-        j.remainingBurstTime--;
-        currentTime++;
-        if (j.remainingBurstTime == 0)
+        Process s = readyQueue.front();
+        readyQueue.pop();
+        if (s.remainingBurstTime <= quan)
         {
-            ct[j.id] = currentTime;
-            tat[j.id] = ct[j.id] - j.arrivalTime;
-            wt[j.id] = tat[j.id] - j.burstTime;
+            currentTime += s.remainingBurstTime;
+            s.remainingBurstTime = 0;
+            ct[s.id] = currentTime;
+            tat[s.id] = ct[s.id] - s.arrivalTime;
+            wt[s.id] = tat[s.id] - s.burstTime;
+            while (!q.empty() && q.front().arrivalTime <= currentTime)
+            {
+                readyQueue.push(q.front());
+                q.pop();
+            }
         }
         else
         {
-            pq.push(j);
+            s.remainingBurstTime -= quan;
+            currentTime += quan;
+            while (!q.empty() && q.front().arrivalTime <= currentTime)
+            {
+                readyQueue.push(q.front());
+                q.pop();
+            }
+            readyQueue.push(s);
         }
     }
-    cout << "ALl the completion times : \n";
+    cout
+        << "ALl the completion times : \n";
     for (int i = 0; i < n; i++)
     {
         cout << "Process " << (i + 1) << ": " << ct[i] << "\n";
