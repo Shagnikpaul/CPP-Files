@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Compare
+struct Compare // sort by priority number 
 {
     bool operator()(vector<int> *a, vector<int> *b)
     {
