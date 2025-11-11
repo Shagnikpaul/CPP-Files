@@ -9,4 +9,5 @@ constant_only 1000
 final_result = total + delta;
 Invalid*Symbol
 validName
+//hello
 99bottles

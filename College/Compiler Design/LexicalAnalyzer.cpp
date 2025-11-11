@@ -1,13 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
+
 
 using namespace std;
 
 bool isKeyword(const string &token)
 {
-    if (
+    return (
         token == "auto" || token == "break" || token == "case" || token == "char" ||
         token == "const" || token == "continue" || token == "default" || token == "do" ||
         token == "double" || token == "else" || token == "enum" || token == "extern" ||
@@ -17,10 +17,7 @@ bool isKeyword(const string &token)
         token == "sizeof" || token == "static" || token == "struct" || token == "switch" ||
         token == "typedef" || token == "union" || token == "unsigned" || token == "void" ||
         token == "volatile" || token == "while" || token == "_Bool" ||
-        token == "_Complex" || token == "_Imaginary")
-        return true;
-
-    return false;
+        token == "_Complex" || token == "_Imaginary");
 }
 
 bool isDelimiter(char ch)
@@ -36,162 +33,108 @@ bool isOperator(char ch)
 
 int main()
 {
-    vector<pair<string, int>> keywords;
-
-    vector<pair<string, int>> identifiers;
-
-    vector<pair<string, int>> numbers;
-
-    vector<pair<char, int>> delimiters;
-
-    vector<pair<string, int>> operators;
-    vector<pair<char, int>> singleOperators;
+    ifstream file("test.txt");
+    if (!file.is_open())
+    {
+        cout << "Error opening file.\n";
+        return 1;
+    }
 
     string s;
     int ignoreLine = 0;
-    ifstream file("test.txt");
-    int i = 0;
+    int lineNumber = 0;
+
     while (getline(file, s))
     {
 
-        for (int j = 0; j < s.size(); j++)
+        for (int j = 0; j < (int)s.size(); j++)
         {
-            if (s[j] == '/' && s[j + 1] == '/')
-            {
-                // ignore the line
-                // cout << "ignored line " << (i + 1) << endl;
-                break;
-            }
+            if (j + 1 < (int)s.size() && s[j] == '/' && s[j + 1] == '/')
+                break; // single-line comment, ignore rest
 
-            if (s[j] == '/' && s[j + 1] == '*')
+            if (j + 1 < (int)s.size() && s[j] == '/' && s[j + 1] == '*')
             {
                 ignoreLine = 1;
-                // cout << "started ignoring from line " << (i + 1) << endl;
+                j += 2;
             }
 
-            if (s[j] == '*' && s[j + 1] == '/')
+            if (j + 1 < (int)s.size() && s[j] == '*' && s[j + 1] == '/')
             {
                 ignoreLine = 0;
                 j += 2;
-                // cout << "stopped ignoring from line " << (i + 1) << endl;
+                continue;
             }
 
             if (ignoreLine)
                 continue;
-            else
+
+            // ---- TOKEN DETECTION ----
+            if (!isDelimiter(s[j]) && s[j] != ' ')
             {
-                // scan ...
-                if (s[j] != '\n' && s[j] != ' ')
+                string token = "";
 
+                // Identifier or keyword
+                if (isalpha(s[j]))
                 {
-                    string token = "";
-                    if (isalpha(s[j]))
+                    while (j < (int)s.length() && (isalnum(s[j]) || s[j] == '_'))
                     {
-                        token = "";
-                        while (j < s.length() && (isalnum(s[j]) || s[j] == '_'))
-                        {
-                            token += s[j];
-                            j++;
-                        }
-
-                        if (isKeyword(token))
-                        {
-                            // cout << "Keyword: " << token << " at line no. " << (i + 1) << endl;
-                            keywords.push_back({token, i + 1});
-                        }
-
-                        else
-                        {
-                            // cout << "Identifier: " << token << " at line no. " << (i + 1) << endl;
-                            identifiers.push_back({token, i + 1});
-                        }
+                        token += s[j];
+                        j++;
                     }
-                    else if (isdigit(s[j]))
+                    j--;
+
+                    if (isKeyword(token))
+                        cout << token << " -> Keyword" << endl;
+                    else
+                        cout << token << " -> Identifier" << endl;
+                }
+
+                // Number
+                else if (isdigit(s[j]))
+                {
+                    while (j < (int)s.length() && isdigit(s[j]))
                     {
-                        token = "";
-                        while (j < s.length() && isdigit(s[j]))
-                        {
-                            token += s[j];
-                            j++;
-                        }
-                        numbers.push_back({token, i + 1});
-                        // cout << "Number: " << token << endl;
+                        token += s[j];
+                        j++;
                     }
+                    j--;
+                    cout << token << " -> Number" << endl;
+                }
 
-                    if (j + 1 < s.length())
+                // Two-character operators
+                else if (j + 1 < (int)s.length())
+                {
+                    string twoCharOp = "";
+                    twoCharOp += s[j];
+                    twoCharOp += s[j + 1];
+
+                    if (twoCharOp == "==" || twoCharOp == "!=" || twoCharOp == "<=" ||
+                        twoCharOp == ">=" || twoCharOp == "&&" || twoCharOp == "||" ||
+                        twoCharOp == "++" || twoCharOp == "--" || twoCharOp == "+=" ||
+                        twoCharOp == "-=" || twoCharOp == "*=" || twoCharOp == "/=")
                     {
-                        string twoCharOp = "";
-                        twoCharOp += s[j];
-                        twoCharOp += s[j + 1];
-
-                        // Check for 2-character operators
-                        if (twoCharOp == "==" || twoCharOp == "!=" || twoCharOp == "<=" ||
-                            twoCharOp == ">=" || twoCharOp == "&&" || twoCharOp == "||" ||
-                            twoCharOp == "++" || twoCharOp == "--" || twoCharOp == "+=" ||
-                            twoCharOp == "-=" || twoCharOp == "*=" || twoCharOp == "/=")
-                        {
-                            // cout << "Operator: " << twoCharOp << endl;
-                            operators.push_back({twoCharOp, i + 1});
-                            j += 2;
-                            continue;
-                        }
+                        cout << twoCharOp << " -> Operator" << endl;
+                        j++;
+                        continue;
                     }
+                }
 
-                    // If it's a single-character operator
-                    if (isOperator(s[j]))
-                    {
-                        singleOperators.push_back({s[j], i + 1});
-                        // cout << "Operator: " << s[j] << endl;
-                    }
+                // Single-character operator
+                if (isOperator(s[j]))
+                {
+                    cout << s[j] << " -> Operator" << endl;
+                }
 
-                    // If delimiter
-                    else if (isDelimiter(s[j]))
-                    {
-                        if (s[j] != ' ' && s[j] != '\n' && s[j] != '\t')
-                        {
-                            delimiters.push_back({s[j], i + 1});
-                            // cout << "Delimiter: " << s[j] << endl;
-                        }
-                    }
+                // Delimiter
+                else if (isDelimiter(s[j]))
+                {
+                    if (s[j] != ' ' && s[j] != '\n' && s[j] != '\t')
+                        cout << s[j] << " -> Delimiter" << endl;
                 }
             }
         }
-        // cout << "Line " << i + 1 << ": " << s << endl;
-        i++;
     }
 
-    cout << "\n\nKeyword list : " << endl;
-    for (const auto &k : keywords)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\nIdentifiers list : " << endl;
-    for (const auto &k : identifiers)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\nOperators list : " << endl;
-    for (const auto &k : operators)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    for (const auto &k : singleOperators)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\n Delimiters list : " << endl;
-    for (const auto &k : delimiters)
-    {
-        cout << k.first << ", Line: " << k.second << endl;
-    }
-
-    cout << "\n\nNumbers list : " << endl;
-    for (const auto &k : numbers)
-    {
-        cout << k.first << " Line: " << k.second << endl;
-    }
+    file.close();
+    return 0;
 }
