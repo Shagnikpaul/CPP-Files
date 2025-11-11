@@ -64,6 +64,8 @@ int main()
             break;
         }
 
+        
+
         // Operand (id or number)
         if (isalnum(current))
         {

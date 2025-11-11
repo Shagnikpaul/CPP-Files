@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 
-
 using namespace std;
 
 bool isKeyword(const string &token)
@@ -47,18 +46,18 @@ int main()
     while (getline(file, s))
     {
 
-        for (int j = 0; j < (int)s.size(); j++)
+        for (int j = 0; j < s.size(); j++)
         {
-            if (j + 1 < (int)s.size() && s[j] == '/' && s[j + 1] == '/')
+            if (j + 1 < s.size() && s[j] == '/' && s[j + 1] == '/')
                 break; // single-line comment, ignore rest
 
-            if (j + 1 < (int)s.size() && s[j] == '/' && s[j + 1] == '*')
+            if (j + 1 < s.size() && s[j] == '/' && s[j + 1] == '*')
             {
                 ignoreLine = 1;
                 j += 2;
             }
 
-            if (j + 1 < (int)s.size() && s[j] == '*' && s[j + 1] == '/')
+            if (j + 1 < s.size() && s[j] == '*' && s[j + 1] == '/')
             {
                 ignoreLine = 0;
                 j += 2;
@@ -76,7 +75,7 @@ int main()
                 // Identifier or keyword
                 if (isalpha(s[j]))
                 {
-                    while (j < (int)s.length() && (isalnum(s[j]) || s[j] == '_'))
+                    while (j < s.length() && (isalnum(s[j]) || s[j] == '_'))
                     {
                         token += s[j];
                         j++;
@@ -92,7 +91,7 @@ int main()
                 // Number
                 else if (isdigit(s[j]))
                 {
-                    while (j < (int)s.length() && isdigit(s[j]))
+                    while (j < s.length() && isdigit(s[j]))
                     {
                         token += s[j];
                         j++;
@@ -102,7 +101,7 @@ int main()
                 }
 
                 // Two-character operators
-                else if (j + 1 < (int)s.length())
+                else if (j + 1 < s.length())
                 {
                     string twoCharOp = "";
                     twoCharOp += s[j];
@@ -134,7 +133,6 @@ int main()
             }
         }
     }
-
     file.close();
     return 0;
 }

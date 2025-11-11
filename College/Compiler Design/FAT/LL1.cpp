@@ -1,7 +1,7 @@
-#include <iostream>
-#include <stack>
-#include <vector>
-#include <string>
+
+
+#include <bits/stdc++.h>
+
 using namespace std;
 
 // Function to tokenize input (id, +, *, (, ), $)
