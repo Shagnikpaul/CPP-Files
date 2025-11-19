@@ -1,372 +1,598 @@
-Here is a **clean, exam-ready 8–10 mark answer** for:
+Below is a **clear, exam-ready, structured** explanation of the **first four NoSQL database types** you listed, including:
 
-### **Instruction Scheduling & Software Pipelining – Role, Examples, and Significance**
+✔ What they are
+✔ Key features
+✔ Examples
+✔ Real-world applications
+✔ Pros & Cons
 
----
-
-# ⭐ **Instruction Scheduling**
-
-## **Role in Compiler Design**
-
-Instruction scheduling reorders machine instructions **without changing program meaning** so that they better utilize the CPU pipeline.
-
-Modern processors have:
-
-* multiple functional units
-* deep pipelines
-* instruction latencies (e.g., load takes several cycles)
-
-If instructions are not scheduled well, the pipeline stalls (wastes cycles).
-
-**Goal:**
-✔ reduce pipeline stalls
-✔ improve instruction-level parallelism (ILP)
-✔ keep all functional units busy
+Perfect for answering a 10–15 mark question.
 
 ---
 
-## **Example**
+# ⭐ **1. Document-Based NoSQL Databases**
 
-Consider a pipeline where a **load** takes 2 cycles before result is available.
+### ✅ **What they are**
 
-Naive code:
+Store data in **semi-structured documents** (JSON, BSON).
+Each document can have a different structure → schema-free.
 
-```
-1   LD   R1, 0(R2)     ; load a
-2   ADD  R3, R1, R4    ; uses R1 immediately → stall
-3   MUL  R5, R6, R7
-```
+### ⭐ **Key Features**
 
-Pipeline stalls between 1 and 2.
+* Flexible and dynamic schema
+* Nested fields supported
+* Rich query capabilities
+* Horizontal scalability (sharding)
+* Indexing on document fields
+* Supports aggregations, map-reduce
 
-### **Scheduled version**
+### 📌 **Examples**
 
-Move an independent instruction between them:
+* **MongoDB**
+* **CouchDB**
+* **Couchbase**
+* **Firestore**
 
-```
-1   LD   R1, 0(R2)
-2   MUL  R5, R6, R7    ; independent, fills delay slot
-3   ADD  R3, R1, R4
-```
+### 🎯 **Real Applications**
 
-Now the ADD executes only after R1 is ready → **no stall**.
+* Product catalogs (e-commerce)
+* User profiles
+* Content management systems
+* Blog, news, forum systems
+* Mobile apps storing JSON data
 
----
+### 👍 **Pros**
 
-## **Significance**
+* Schema flexibility
+* Good for complex, nested data
+* Easy to scale out horizontally
+* Developer-friendly JSON format
 
-* Reduces pipeline stalls
-* Improves CPU throughput
-* Exploits ILP in basic blocks
-* Makes static pipelines (no hardware interlocks) efficient
-* Essential for VLIW and RISC architectures
+### 👎 **Cons**
 
-Instruction scheduling is especially important for **statically scheduled processors**, where compiler must insert NOPs or reorder instructions.
-
----
-
-# ⭐ **Software Pipelining**
-
-## **Role in Compiler Design**
-
-Software pipelining is a loop-optimization technique where **iterations of a loop are overlapped**.
-Instead of finishing iteration `i` completely before starting `i+1`, the compiler starts iteration `i+1` **before** iteration `i` finishes.
-
-This keeps the pipeline full across loop iterations.
+* No strong relationship support
+* Complex joins difficult
+* Large documents may slow performance
+* Eventual consistency in distributed setups
 
 ---
 
-## **Simple Example**
+# ⭐ **2. Key–Value Stores**
 
-Consider a loop:
+### ✅ **What they are**
 
-```
-for (i = 0; i < n; i++) {
-    LD   R1, A[i]
-    ADD  R2, R1, R3
-    ST   R2, B[i]
-}
-```
+Stores data as **simple key → value pairs**.
+Fastest NoSQL type. Value can be strings, JSON, blobs, etc.
 
-Each iteration has a load latency that causes stalls.
+### ⭐ **Key Features**
 
-### **Software-Pipelined Loop (conceptually)**
+* O(1) lookups
+* In-memory or disk-based
+* Supports TTL (expiry)
+* Distributed hashing
+* Very high throughput
+* Simple data model
 
-```
-; prologue – start first few ops
-LD   R1, A[0]
+### 📌 **Examples**
 
-; kernel – steady state (overlapping iterations)
-for i = 1 … n-1:
-    LD   R2, A[i]      ; load for future iteration
-    ADD  R1, R1, R3    ; compute from previous iteration's load
-    ST   R1, B[i-1]    ; store earlier result
-    R1 = R2            ; forward loaded value
+* **Redis**
+* **Amazon DynamoDB**
+* **Riak**
+* **Memcached**
 
-; epilogue – finish last pending operations
-ADD  R1, R1, R3
-ST   R1, B[n-1]
-```
+### 🎯 **Real Applications**
 
-Now the pipeline stays busy because the load of iteration `i+1` overlaps with the add/store of iteration `i`.
+* Session storage
+* Caching frequently accessed data
+* User carts
+* Leaderboards (gaming)
+* Rate limiting
+* Token and authentication stores
 
----
+### 👍 **Pros**
 
-## **Significance**
+* Extremely fast
+* Highly scalable
+* Easy to distribute horizontally
+* Best for simple lookups
 
-* Greatly increases loop throughput
-* Keeps pipeline full across iterations
-* Exploits maximum ILP inside loops
-* Very effective on VLIW, superscalar, and DSP processors
-* Reduces execution time of tight loops (kernels)
+### 👎 **Cons**
 
-Software pipelining is used heavily in:
-
-* high-performance computing
-* DSP compilers
-* vectorizing compilers
-* loop optimizers
+* Cannot run complex queries
+* No joins, no relational logic
+* Value is often opaque
+* Not suitable for analytics
 
 ---
 
+# ⭐ **3. Column-Based / Wide-Column NoSQL Databases**
 
+### ✅ **What they are**
 
+Stores data in **column families** instead of rows.
+Optimized for large-scale distributed data and high write loads.
 
+### ⭐ **Key Features**
 
+* Column families grouping related data
+* Tunable consistency (strong/eventual)
+* Distributed horizontally across clusters
+* High write performance
+* Designed for petabyte-scale systems
+* Range queries and time-series support
 
-# ⭐ **Short Note: Instruction Scheduling**
+### 📌 **Examples**
 
-**Instruction Scheduling** is a compiler optimization that **reorders machine instructions** (without changing program meaning) to **avoid pipeline stalls** and improve performance.
+* **Apache Cassandra**
+* **HBase**
+* **Google Bigtable**
+* **ScyllaDB**
 
-### ✔ Goal
+### 🎯 **Real Applications**
 
-* Reduce delays caused by instruction latencies
-* Increase Instruction-Level Parallelism (ILP)
-* Keep functional units busy
+* Time-series data (IoT, sensors)
+* Real-time analytics
+* Logging systems
+* Product event history
+* Monitoring dashboards
+* Messaging data
 
-### ✔ Example (Load delay)
+### 👍 **Pros**
 
-Naive sequence:
+* Very high availability (AP in CAP)
+* Scales to huge workloads
+* Fast sequential writes
+* Good for time-series and analytics
 
-```
-LD   R1, 0(R2)     ; load a
-ADD  R3, R1, R4    ; uses R1 → pipeline stall
-```
+### 👎 **Cons**
 
-If load takes 2 cycles, ADD must wait → **stall**.
+* Hard to design optimal schemas
+* Not good for ad-hoc queries
+* Eventual consistency trade-offs
+* No joins or advanced aggregations
 
-**Scheduled version:**
+---
 
-```
-LD   R1, 0(R2)
-MUL  R5, R6, R7    ; independent → fills delay
-ADD  R3, R1, R4
-```
+# ⭐ **4. Graph-Based NoSQL Databases**
 
-The independent MUL fills the load delay slot → **no stall**.
+### ✅ **What they are**
 
-### ✔ Significance
+Designed to store **highly connected data** as **nodes (entities)** and **edges (relationships)**.
 
-* Improves CPU throughput
-* Reduces NOPs and wasted cycles
-* Essential for RISC/VLIW processors
-* Achieves faster execution for basic blocks
+### ⭐ **Key Features**
+
+* Relationship-first storage
+* ACID transactions (usually)
+* Graph traversal algorithms (BFS, DFS, shortest path)
+* Index-free adjacency (fast edge navigation)
+* Friendly query languages: Cypher, Gremlin
+
+### 📌 **Examples**
+
+* **Neo4j**
+* **Amazon Neptune**
+* **JanusGraph**
+* **TigerGraph**
+
+### 🎯 **Real Applications**
+
+* Social networks (friend-of-a-friend queries)
+* Recommendation engines
+* Fraud detection
+* Knowledge graphs
+* Network management
+* Identity/access graphs
+
+### 👍 **Pros**
+
+* Best for complex relationships
+* Fast graph traversal
+* Natural modeling of networks
+* Good for recommendation systems
+
+### 👎 **Cons**
+
+* Not ideal for analytics
+* Difficult to scale horizontally
+* Slow for non-graph workloads
+* Requires specialized knowledge
+
+---
+
+# 🎉 **Summary Table (Quick Revision)**
+
+| Type              | Key Features                         | Examples           | Best Use Cases                   | Pros                   | Cons               |
+| ----------------- | ------------------------------------ | ------------------ | -------------------------------- | ---------------------- | ------------------ |
+| **Document**      | JSON docs, flexible schema, indexing | MongoDB, Couchbase | Product catalog, CMS             | Flexible, scalable     | Weak joins         |
+| **Key–Value**     | Key→value, in-memory, TTL            | Redis, DynamoDB    | Sessions, caching                | Fastest                | No complex queries |
+| **Column-Family** | Column families, tunable consistency | Cassandra, HBase   | Analytics, time-series           | Huge scalability       | Complex schema     |
+| **Graph**         | Nodes/edges, traversal queries       | Neo4j, Neptune     | Social networks, recommendations | Best for relationships | Hard to scale      |
 
 ---
 
 
-Here is a **precise, exam-ready 8–10 mark answer** on:
 
-# **Design Aspects of Vector Operations in a Vectorizing Compiler**
-
-A **vectorizing compiler** transforms scalar programs into **vector operations** so they can run efficiently on **vector architectures**.
-Vector architectures execute one instruction on **multiple data elements** in parallel (SIMD).
-
-To achieve this, the compiler must analyze loops and generate vector instructions that exploit **data-level parallelism (DLP)**.
+Below is a **perfect exam-ready explanation** of the **CAP theorem** followed by a **comparison of the four NoSQL database types (Document, Key–Value, Column-Family, Graph)** in terms of **CAP, features, performance, use cases, pros/cons**.
 
 ---
 
-# ⭐ **1. Detection of Vectorizable Loops**
+# ⭐ **CAP Theorem — Clear Explanation**
 
-The compiler first identifies loops where each iteration is **independent** of others.
+The **CAP theorem** states that in a **distributed database**, you can only guarantee **two out of the following three** at any time:
 
-Example:
+### **C → Consistency**
 
-```
-for (i = 0; i < n; i++)
-    A[i] = B[i] + C[i];
-```
+Every read returns the **most recent write**.
+No stale data. All nodes see the same data at the same time.
 
-Each iteration uses different array elements → **fully vectorizable**.
+### **A → Availability**
 
-### Requirements:
+Every request gets a **response**, even if some nodes fail.
+The system should always be “up.”
 
-* No loop-carried dependencies
-* No ambiguous pointer aliasing
-* Same operation applied on arrays in a uniform pattern
+### **P → Partition Tolerance**
 
----
-
-# ⭐ **2. Dependence Analysis**
-
-The compiler checks whether any instruction in iteration *i* depends on iteration *i–1*.
-
-It uses:
-
-* **Data dependence tests** (e.g., Banerjee test, GCD test)
-* **Array index analysis**
-* **Pointer/alias analysis**
-
-If no loop-carried dependencies → safe to vectorize.
+System continues functioning even if **network partitions** occur
+(i.e., nodes cannot communicate).
 
 ---
 
-# ⭐ **3. Generation of Vector Instructions**
+## ⭐ Key Idea
 
-Instead of multiple scalar instructions, the compiler produces **one vector operation**.
+In a distributed system:
 
-Example scalar:
-
-```
-for i:
-    A[i] = B[i] + C[i]
-```
-
-Vectorized form:
-
-```
-LOADV V1, B[i : i+7]
-LOADV V2, C[i : i+7]
-ADDV  V3, V1, V2
-STOREV A[i : i+7]
-```
-
-Each instruction operates on 8 elements at once (vector length = 8).
+* **Partition tolerance is mandatory** (networks can fail anytime).
+* Therefore, a distributed DB must choose between **Consistency (CP)** or **Availability (AP)**.
 
 ---
 
-# ⭐ **4. Handling Vector Length (VL) and Strip-Mining**
+### ✔ If network partitions occur, you must choose:
 
-Hardware vector registers have a fixed length (e.g., 64 or 128 elements).
+### → **CP System**
 
-If `n` > vector length, the compiler uses **strip-mining**:
+Give up **Availability** to maintain complete **Consistency**.
+Some requests may fail, but data is correct.
 
-* Break loop into chunks of size VL
-* Use vector instructions inside chunk
-* Handle remainder with scalar code
-
-Example:
-
-```
-for i = 0; i < n; i += VL:
-    operate on VL elements
-```
+**Examples:** HBase, MongoDB (default), Neo4j
 
 ---
 
-# ⭐ **5. Data Alignment and Memory Access Optimization**
+### → **AP System**
 
-Vector instructions require:
+Give up **Consistency** to maintain **Availability**.
+System always responds, but data may be stale temporarily.
 
-* aligned memory accesses
-* contiguous or stride-based patterns
-
-Compiler ensures:
-
-* **Alignment correction** (using peel loops)
-* **Gather/scatter** for indirect accesses
-* Avoids bank conflicts in memory
-
-Example of vector stride:
-
-```
-LOADV.S V1, A[i], stride=2
-```
+**Examples:** Cassandra, DynamoDB, Riak
 
 ---
 
-# ⭐ **6. Masking and Conditional Vector Operations**
+# ⭐ How CAP applies to NoSQL (Quick Table)
 
-When the loop has conditionals, the compiler uses **masked vector operations**.
-
-Example:
-
-```
-for(i=0;i<n;i++)
-    if (A[i] > 0) B[i] = A[i];
-```
-
-Vectorized form:
-
-```
-CMPV.M mask, A > 0
-MOVV.M B, A, mask
-```
-
-The mask ensures only selected elements are updated.
+| NoSQL Type                                   | CAP Choice                 | Notes                                                   |
+| -------------------------------------------- | -------------------------- | ------------------------------------------------------- |
+| **Document DB (MongoDB, CouchDB)**           | CP (MongoDB), AP (CouchDB) | Mongo ensures consistency; CouchDB ensures availability |
+| **Key–Value Stores (Redis, DynamoDB, Riak)** | AP                         | Prioritizes high availability, fast access              |
+| **Column-Family Stores (Cassandra, HBase)**  | AP (Cassandra), CP (HBase) | Cassandra always available; HBase is consistent         |
+| **Graph DB (Neo4j, Neptune)**                | CP                         | Graph data requires correct relationships               |
 
 ---
 
-# ⭐ **7. Support for Reductions**
+# ⭐ **Comparison of the Four NoSQL Types**
 
-Loops that compute a sum, max, or min need special handling.
-
-Scalar:
-
-```
-sum = 0;
-for i:
-    sum += A[i];
-```
-
-Vector form:
-
-```
-LOADV V1, A[i:i+VL]
-REDUCE.ADD sum, V1
-```
-
-Vectorizing compiler inserts a **tree reduction** to combine partial sums.
+Below is the **most structured exam answer**:
 
 ---
 
-# ⭐ **8. Loop Transformations for Vectorization**
+# 🔶 **1. Document-Based NoSQL Databases**
 
-To expose vector parallelism, the compiler performs:
+### ✔ CAP Property:
 
-* Loop interchange
-* Loop fusion
-* Loop distribution
-* Strength reduction
+* **MongoDB → CP** (focus on consistency)
+* **CouchDB → AP** (focus on availability)
 
-Example:
+### ✔ Features:
 
-```
-A[i] = B[i] + C[i]
-D[i] = E[i] * F[i]
+* JSON/BSON flexible schema
+* Rich query support
+* Indexing + aggregation
+* Good for nested structures
 
-→ loop fusion to improve vectorization
-```
+### ✔ Use Cases:
+
+* Product catalogs
+* User profiles
+* CMS websites
+* Mobile/web apps
+
+### ✔ Pros:
+
+* Highly flexible schema
+* Easy to scale horizontally
+* Developer-friendly
+
+### ✔ Cons:
+
+* Complex joins are difficult
+* Eventual consistency in distributed mode
+* Large documents reduce performance
 
 ---
 
-# ⭐ **Significance (Why it matters)**
+# 🔶 **2. Key–Value Stores**
 
-* Enables exploitation of **SIMD hardware**
-* Improves throughput dramatically (executing 4–1024 elements at once)
-* Reduces loop overhead
-* Lowers instruction count
-* Key for scientific computing, ML, multimedia, and HPC
+### ✔ CAP Property:
 
-Vectorizing compilers are essential to fully utilize architectures like:
+* **AP systems** (choose availability)
+  Examples: Redis, DynamoDB, Riak
 
-* Cray vector processors
-* SSE, AVX, NEON (modern CPUs)
-* GPU vector units
+### ✔ Features:
+
+* Simple key→value retrieval
+* Very fast lookups
+* In-memory storage
+* TTL (auto-expiry)
+* Distributed hashing
+
+### ✔ Use Cases:
+
+* Sessions storage
+* Caching
+* Shopping cart
+* Leaderboards
+* Token stores
+
+### ✔ Pros:
+
+* Fastest read/write performance
+* Very easy to scale
+* Perfect for high throughput workloads
+
+### ✔ Cons:
+
+* Cannot perform complex queries
+* No joins, no secondary indexing
+* Not suitable for analytics/relationships
 
 ---
 
-# ⭐ **Short Summary (For 5-mark or short notes)**
+# 🔶 **3. Column-Family (Wide Column) Stores**
 
-A vectorizing compiler analyzes loops for data-level parallelism and transforms scalar operations into vector instructions. It ensures no dependencies, handles vector length via strip-mining, optimizes memory alignment, uses masking for conditional execution, and supports reductions. These design aspects allow vector processors to execute one operation on many data elements simultaneously, achieving high parallel performance.
+### ✔ CAP Property:
 
+* **Cassandra → AP** (high availability, eventual consistency)
+* **HBase → CP** (consistency-first)
+
+### ✔ Features:
+
+* Organizes data by **column families**
+* Very high write performance
+* Partitioned across many servers
+* Tunable consistency
+* Handles massive datasets (petabytes)
+
+### ✔ Use Cases:
+
+* Time-series data
+* Analytics and Big Data
+* Logging systems
+* IoT sensor data
+* Real-time dashboards
+
+### ✔ Pros:
+
+* Best for large-scale distributed systems
+* Great write performance
+* High availability in Cassandra
+* Petabyte-level storage
+
+### ✔ Cons:
+
+* Complex schema design
+* Hard to query without knowing patterns
+* Not ideal for transactional workloads
+
+---
+
+# 🔶 **4. Graph Databases**
+
+### ✔ CAP Property:
+
+* **CP systems** (consistency required for relationships)
+  Examples: Neo4j, Amazon Neptune
+
+### ✔ Features:
+
+* Node-edge graph model
+* ACID transactions
+* Graph traversal algorithms
+* Specialized query languages: Cypher, Gremlin
+
+### ✔ Use Cases:
+
+* Social networks
+* Recommendation engines
+* Fraud detection
+* Network topology
+* Knowledge graphs
+
+### ✔ Pros:
+
+* Best for relationship-heavy data
+* Fast traversal
+* Natural and intuitive graph modeling
+
+### ✔ Cons:
+
+* Harder to scale horizontally
+* Poor performance for non-graph queries
+* More niche use-case
+
+---
+
+# ⭐ Final Summary: CAP + NoSQL Comparison
+
+| Type              | CAP Focus | Best For               | Strength             | Weakness           |
+| ----------------- | --------- | ---------------------- | -------------------- | ------------------ |
+| **Document**      | CP/AP     | Catalogs, CMS          | Flexible schema      | No joins           |
+| **Key–Value**     | AP        | Sessions, cache        | Fastest              | Limited queries    |
+| **Column-Family** | AP/CP     | Analytics, time-series | Extreme scaling      | Complex schema     |
+| **Graph**         | CP        | Social networks        | Relationship queries | Scalability limits |
+
+---
+
+
+Below is a **clear, exam-oriented explanation** of the **BASE model**, including **illustrations**, real-world examples, and comparison with ACID. Perfect for 5–10 mark questions.
+
+---
+
+# ⭐ **BASE Model in NoSQL – Explained with Illustrations**
+
+NoSQL databases often follow the **BASE** model instead of **ACID**.
+
+BASE stands for:
+
+* **B**asically
+* **A**vailable
+* **S**oft-state
+* **E**ventually consistent
+
+It is designed for **distributed, high-availability systems**, like e-commerce, social networks, and large-scale web apps.
+
+---
+
+# ⭐ 1. **Basically Available**
+
+### ✔ Meaning
+
+The system **guarantees availability** — the database always responds to requests, even if some nodes are down or out of sync.
+
+### ✔ Illustration
+
+Imagine a distributed shopping cart database:
+
+🛒 **User clicks “Add to Cart”**
+→ The system records it on *one available node*
+→ Even if another node is down, the user still gets a response:
+“Item added successfully.”
+
+⛔ The system does **not** wait for all nodes to update (unlike ACID).
+
+### ✔ Real Example
+
+* **Amazon DynamoDB / Dynamo system**
+* Even if a server fails, the system quickly redirects to another server.
+
+---
+
+# ⭐ 2. **Soft-State**
+
+### ✔ Meaning
+
+The state of the system **may change over time**, even without new input.
+
+This happens because:
+
+* Data is being replicated in the background
+* Nodes are synchronizing
+* Some nodes may temporarily have stale or incomplete information
+
+### ✔ Illustration
+
+📍 Node A has: Cart = [“Phone”, “Case”]
+📍 Node B (slightly behind) shows: Cart = [“Phone”]
+
+Over time, the system fixes the difference:
+
+🔄 Background replication updates Node B
+→ Now both nodes show the same cart.
+
+The system is **soft** because the state is not guaranteed to be immediately stable.
+
+---
+
+# ⭐ 3. **Eventually Consistent**
+
+### ✔ Meaning
+
+The system does **not** guarantee immediate consistency.
+But it ensures that **if no new updates occur**, all replicas will **eventually** hold the same data.
+
+**Consistency is delayed, not ignored.**
+
+### ✔ Illustration
+
+At time **t1**:
+
+* User updates their shipping address on Node A
+* Node B still shows the old address
+
+At time **t2** (after replication completes):
+
+* Both Node A and Node B show the same (new) address
+  → **Consistency is achieved eventually.**
+
+### ✔ Real Example
+
+* **Cassandra**
+* **DynamoDB**
+* **CouchDB**
+
+Nodes become consistent after enough time or replication cycles.
+
+---
+
+# ⭐ Putting It Together — Visual Diagram
+
+### BASE Model
+
+```
+        User Request
+              ↓
+     ┌─────────────────────┐
+     │  Basically Available │  → Always responds
+     └─────────────────────┘
+              ↓
+     ┌─────────────────────┐
+     │      Soft State      │  → Data keeps changing in background
+     └─────────────────────┘
+              ↓
+     ┌─────────────────────┐
+     │ Eventually Consistent│ → All nodes converge later
+     └─────────────────────┘
+```
+
+This flow shows how BASE trades immediate consistency for better performance and availability.
+
+---
+
+# ⭐ BASE vs ACID (Quick Comparison)
+
+| Property      | ACID (SQL)            | BASE (NoSQL)               |
+| ------------- | --------------------- | -------------------------- |
+| Goal          | Accuracy              | Availability + Scalability |
+| Consistency   | Immediate             | Delayed                    |
+| State         | Stable                | Soft / changing            |
+| Availability  | Lower (locks)         | High                       |
+| Suitable For  | Banking, transactions | E-commerce, social media   |
+| Response Time | Slower                | Faster                     |
+
+---
+
+# ⭐ Real-Life E-commerce Illustration (Perfect for Exams)
+
+### Imagine Amazon’s Add-to-Cart system:
+
+When millions of users add items at the same time:
+
+✔ System **must respond immediately** → Basically Available
+✔ Cart data may be temporarily inconsistent across servers → Soft State
+✔ Eventually, all servers sync and reflect the correct cart → Eventually Consistent
+
+If ACID were used, the cart system would lock and slow down — unacceptable for millions of users.
+
+In BASE:
+
+* Some temporary inconsistency is allowed
+* But high availability and speed are maintained
+
+---
