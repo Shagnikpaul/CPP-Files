@@ -108,7 +108,8 @@ int main()
         processRow[i] = subByteTransform(processRow[i]);
     }
     printRow("step 1.3 - sub byte substitution...", processRow);
-    int const_row[4] = {0x04, 0x00, 0x00, 0x00};
+    // depends on the round 2^round number
+    int const_row[4] = {0x01, 0x00, 0x00, 0x00};
 
     // step 1.4 - add xor const row
     for (int i = 0; i < 4; i++)
