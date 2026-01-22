@@ -49,6 +49,23 @@ void rowShifting(int row[4], int times)
     }
 }
 
+void printCipherTextRow(int mat[4][4])
+{
+    const char *hex = "0123456789ABCDEF";
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            int x = mat[j][i];
+
+            cout << hex[(x >> 4) & 0xF]
+                 << hex[x & 0xF]
+                 << " ";
+        }
+    }
+}
+
 void printHexMatrix(int mat[4][4])
 {
     const char *hex = "0123456789ABCDEF";
@@ -117,16 +134,16 @@ int main()
     cin >> plainText;
     int pt_state_matrix[4][4];
     inputHex(pt_state_matrix, plainText);
-    cout << "plaintext state matrix : " << endl;
-    printHexMatrix(pt_state_matrix);
+    // cout << "plaintext state matrix : " << endl;
+    // printHexMatrix(pt_state_matrix);
 
     string key;
     cout << "Enter the key in hexadecimal format without the \"0x\" part : ";
     cin >> key;
     int key_state_matrix[4][4];
     inputHex(key_state_matrix, key);
-    cout << "key state matrix : " << endl;
-    printHexMatrix(key_state_matrix);
+    // cout << "key state matrix : " << endl;
+    // printHexMatrix(key_state_matrix);
 
     // step 1 - pre-processing xor of pt and key state matrix
 
@@ -139,8 +156,8 @@ int main()
         }
     }
 
-    cout << "output of pre-process step : " << endl;
-    printHexMatrix(preProcessOutput);
+    // cout << "output of pre-process step : " << endl;
+    // printHexMatrix(preProcessOutput);
 
     // step 2 - sub byte transformation
     int subByteOutput[4][4];
@@ -152,8 +169,8 @@ int main()
         }
     }
 
-    cout << "output of sub-byte transformation step : " << endl;
-    printHexMatrix(subByteOutput);
+    // cout << "output of sub-byte transformation step : " << endl;
+    // printHexMatrix(subByteOutput);
 
     // step 3 row shifting operation
     int shiftRowOutput[4][4];
@@ -169,8 +186,8 @@ int main()
         rowShifting(shiftRowOutput[i], i);
     }
 
-    cout << "output of row-shifting transformation step : " << endl;
-    printHexMatrix(shiftRowOutput);
+    // cout << "output of row-shifting transformation step : " << endl;
+    // printHexMatrix(shiftRowOutput);
 
     // column mixing step...
     int columnMixingOutput[4][4];
@@ -182,8 +199,9 @@ int main()
             columnMixingOutput[j][i] = multiplyRC(j, i, shiftRowOutput);
         }
     }
-    cout << "output of column mixing step : " << endl;
-    printHexMatrix(columnMixingOutput);
-
+    // cout << "output of column mixing step : " << endl;
+    // printHexMatrix(columnMixingOutput);
+    cout << "Cipher text after encryption process : ";
+    printCipherTextRow(columnMixingOutput);
     return 0;
 }

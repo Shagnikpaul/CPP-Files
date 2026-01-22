@@ -32,6 +32,23 @@ void printHexMatrix(int mat[4][4])
     }
 }
 
+void printTextRow(int mat[4][4])
+{
+    const char *hex = "0123456789ABCDEF";
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            int x = mat[j][i];
+
+            cout << hex[(x >> 4) & 0xF]
+                 << hex[x & 0xF]
+                 << " ";
+        }
+    }
+}
+
 void inputHex(int mat[4][4], string inp)
 {
     int in = 0;
@@ -89,8 +106,8 @@ int main()
     cin >> key;
     int key_state[4][4];
     inputHex(key_state, key);
-    cout << "key state matrix " << endl;
-    printHexMatrix(key_state);
+    // cout << "key state matrix " << endl;
+    // printHexMatrix(key_state);
 
     // step 1.1 - extract last column ...
     int processRow[4];
@@ -98,16 +115,16 @@ int main()
     {
         processRow[i] = key_state[i][3];
     }
-    printRow("step 1.1 - extract last column ...", processRow);
+    // printRow("step 1.1 - extract last column ...", processRow);
     // step 1.2 - circular shift left by 1 time...
     rowShifting(processRow, 1);
-    printRow("step 1.2 - circular shift left by 1 time....", processRow);
+    // printRow("step 1.2 - circular shift left by 1 time....", processRow);
     // step 1.3 - sub byte substitution...
     for (int i = 0; i < 4; i++)
     {
         processRow[i] = subByteTransform(processRow[i]);
     }
-    printRow("step 1.3 - sub byte substitution...", processRow);
+    // printRow("step 1.3 - sub byte substitution...", processRow);
     // depends on the round 2^round number
     int const_row[4] = {0x01, 0x00, 0x00, 0x00};
 
@@ -116,8 +133,8 @@ int main()
     {
         processRow[i] = processRow[i] ^ const_row[i];
     }
-    printRow("step 1.4 - add xor const row", processRow);
-    // step 1.5 add the first col_row to the processed row
+    // printRow("step 1.4 - add xor const row", processRow);
+    //  step 1.5 add the first col_row to the processed row
 
     for (int j = 0; j < 4; j++)
     {
@@ -129,9 +146,10 @@ int main()
         {
             ans_state[i][j] = processRow[i];
         }
-        printRow("word :", processRow);
+        // printRow("word :", processRow);
     }
 
-    cout << "\nresulting key after round 1 : " << endl;
-    printHexMatrix(ans_state);
+    cout << "\nresulting key after round 1 : ";
+    printTextRow(ans_state);
+    return 0;
 }

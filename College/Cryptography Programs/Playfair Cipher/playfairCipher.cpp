@@ -50,9 +50,9 @@ int main()
         {
             row[keyMatrix[i][j] - 'A'] = i;
             col[keyMatrix[i][j] - 'A'] = j;
-            cout << keyMatrix[i][j] << " ";
+            //cout << keyMatrix[i][j] << " ";
         }
-        cout << endl;
+        //cout << endl;
     }
 
     // fixing I/J as same cell in the matrix...
@@ -85,7 +85,7 @@ int main()
             processedPT += plainText[i];
         }
     }
-    cout << "Stage 1 processing plain text : " << processedPT << endl;
+    //cout << "Stage 1 processing plain text : " << processedPT << endl;
     /*
         - insert 'X' in between repeated characters
         - add 'X' at the end if odd length
@@ -119,7 +119,7 @@ int main()
         processedPT2 += 'X';
     }
 
-    cout << "Stage 2 processing plain text : " << processedPT2 << endl;
+    //cout << "Stage 2 processing plain text : " << processedPT2 << endl;
 
     // encryption
 
