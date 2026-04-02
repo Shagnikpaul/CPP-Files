@@ -23,20 +23,17 @@ int main()
             break;
         }
     }
-
     int sig = 1;
     for (int i = 1; i <= d; i++)
     {
         sig = (hm * sig) % n;
     }
-
     cout << "Signature : " << sig << endl;
     int m_d = 1;
     for (int i = 1; i <= e; i++)
     {
         m_d = (sig * m_d) % n;
     }
-
     if (hm == m_d)
     {
         cout << "Message accepted";

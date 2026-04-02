@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 unsigned int cirRight16(unsigned int x, unsigned int s)
@@ -31,6 +32,6 @@ int main()
     cin >> hex >> w_i_2;
 
     int w_i;
-    w_i = w_i_16 + rotShif(w_i_15, 1, 8, 7) + w_i_7 + rotShif(w_i_2, 19, 61, 6);
-    cout << "Wi = " << hex << uppercase << w_i;
+    w_i = (w_i_16 + rotShif(w_i_15, 1, 8, 7) + w_i_7 + rotShif(w_i_2, 19, 61, 6)) & 0xFFFF;
+    cout << "W" << i << " = " << hex << uppercase << w_i << setw(4) ;
 }
