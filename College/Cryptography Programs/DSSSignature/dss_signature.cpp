@@ -4,7 +4,7 @@ using namespace std;
 int modExp(int base, int exp, int mod)
 {
     int result = 1;
-    base = base % mod;
+    base %= mod;
     for (int i = 0; i < exp; i++)
     {
         result = (result * base) % mod;
@@ -14,29 +14,7 @@ int modExp(int base, int exp, int mod)
 
 int modInverse(int x, int q)
 {
-    int n = q, phi = q;
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (n % p == 0)
-        {
-            while (n % p == 0)
-                n /= p;
-            phi -= phi / p;
-        }
-    }
-    if (n > 1)
-        phi -= phi / n;
-    int exp = phi - 1;
-    int result = 1;
-    x %= q;
-    while (exp > 0)
-    {
-        if (exp % 2)
-            result = (result * x) % q;
-        x = (x * x) % q;
-        exp /= 2;
-    }
-    return result;
+    return modExp(x, q - 2, q);
 }
 
 int main()

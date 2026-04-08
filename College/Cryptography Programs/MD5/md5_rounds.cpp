@@ -4,7 +4,7 @@ using namespace std;
 
 int cirLef(int x, int s)
 {
-    return (x << s) | (x >> (4 - s));
+    return ((x << s) | (x >> (4 - s))) & 0xF;
 }
 
 int main()
@@ -42,6 +42,12 @@ int main()
 
     cout << "For round 1 - Step 1" << endl;
     nlp = (b & c) | (~b & d);
+    /*
+        for other rounds
+        - (b and d) or (c and ~d)
+        - b xor c xor d
+        - c xor (b or ~d)
+    */
     x = (nlp + a + m0 + t0) % mod;
     y = cirLef(x, 1);
     z = (y + b) % mod;
