@@ -15,6 +15,7 @@ int main()
     cout << "Enter plain text: ";
     cin >> pt;
     int d = 1;
+    // find such a number which is e*d % phi = 1 so we are brute force searching for it...
     for (int i = 1; i < phi; i++)
     {
         if ((e * i) % phi == 1)

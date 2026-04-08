@@ -1,18 +1,18 @@
 #include <iostream>
 using namespace std;
 
-void printRow(string msg, int row[4])
-{
-    cout << msg << " : ";
-    const char *hex = "0123456789ABCDEF";
-    for (int i = 0; i < 4; i++)
-    {
-        cout << hex[(row[i] >> 4) & 0xF]
-             << hex[row[i] & 0xF]
-             << " ";
-    }
-    cout << endl;
-}
+// void printRow(string msg, int row[4])
+// {
+//     cout << msg << " : ";
+//     const char *hex = "0123456789ABCDEF";
+//     for (int i = 0; i < 4; i++)
+//     {
+//         cout << hex[(row[i] >> 4) & 0xF]
+//              << hex[row[i] & 0xF]
+//              << " ";
+//     }
+//     cout << endl;
+// }
 
 void printHexMatrix(int mat[4][4])
 {
